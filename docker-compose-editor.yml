@@ -1,0 +1,25 @@
+version: '3.8'
+services:
+  editor:
+    image: codercom/code-server:latest
+    ports:
+      - 8081:8080
+    environment:
+      - PASSWORD=admin
+      # - TZ=${TIMEZONE}
+      - SUDO_PASSWORD=admin
+    volumes:
+      - ./data:/home/coder/project
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.services.editor.loadbalancer.passhostheader=true"
+      - "traefik.docker.network=traefik-network"
+      - "traefik.http.routers.editor.rule=Host(`editor.130.61.208.249`)"
+      - "traefik.http.routers.editor.entrypoints=http"
+      - "traefik.http.services.editor.loadbalancer.server.port=8080"
+    networks:
+      - traefik-network
+
+networks:
+  traefik-network:
+    external: true

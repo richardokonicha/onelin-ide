@@ -1,0 +1,36 @@
+version: "3.9"
+
+services:
+  portainer:
+    image: portainer/portainer-ee:latest
+    container_name: portainer
+    restart: always
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - portainer_data:/data
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.services.portainer.loadbalancer.passhostheader=true"
+      - "traefik.docker.network=traefik-network"
+      - "traefik.http.routers.portainer.rule=Host(`portainer.130.61.208.249`)"
+      - "traefik.http.routers.portainer.entrypoints=http"
+      - "traefik.http.services.portainer.loadbalancer.server.port=9000"
+
+      # - "traefik.http.routers.portainer.rule=PathPrefix(`/p`)"
+      # - "traefik.http.routers.portainer.service=portainer"
+      # - "traefik.http.routers.portainer.rule=Host(`portainer.fugoku.com`)"
+      # - "traefik.http.routers.portainer.tls=true"
+      # - "traefik.http.routers.portainer.tls.certresolver=letsencrypt"
+      # - "traefik.http.services.portainer.loadbalancer.server.port=9433"
+    ports:
+      - "9433:9433"
+      - "9000:9000"
+    networks:
+      - traefik-network
+
+networks:
+  traefik-network:
+    external: true
+
+volumes:
+  portainer_data:

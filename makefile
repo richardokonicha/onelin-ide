@@ -1,2 +1,5 @@
-reverse-proxy
-		@docker-compose up -d reverse-proxy
+.PHONY: traefik
+traefik:
+	@docker compose -f ./compose-traefik.yml -d up
+
+
